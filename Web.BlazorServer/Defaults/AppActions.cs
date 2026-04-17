@@ -88,6 +88,28 @@ public enum AppActions
     UpdateSap,
     #endregion Configuration - Sap Setup
 
+    #region Configuration - Api Setup
+    [Description("Get All Api")]
+    GetAllApis,
+    [Description("Create Api")]
+    CreateApi,
+    [Description("View Api")]
+    ViewApi,
+    [Description("Update Api")]
+    UpdateApi,
+    #endregion Configuration - Api Setup
+
+    #region Configuration - Email Setup
+    [Description("Get All Emails")]
+    GetAllEmails,
+    [Description("Create Email")]
+    CreateEmail,
+    [Description("View Email")]
+    ViewEmail,
+    [Description("Update Email")]
+    UpdateEmail,
+    #endregion Configuration - Email Setup
+
 
     #region Administration - Truck Assignment
     [Description("Get All Trucks")]

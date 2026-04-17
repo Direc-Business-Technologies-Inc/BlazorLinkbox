@@ -481,5 +481,8 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
+# Markdown files
+*.md
+
 # Exclusions
 !Integration.SAP/

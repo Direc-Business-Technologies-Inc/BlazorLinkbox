@@ -29,8 +29,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Components\Pages\Configuration\FieldMapping\" />
-	  <Folder Include="Components\Pages\Configuration\Setup\EmailSetup\" />
-	  <Folder Include="Components\Pages\Configuration\Setup\ApiSetup\" />
 	  <Folder Include="Helpers\" />
 	  <Folder Include="Services\" />
 	</ItemGroup>
