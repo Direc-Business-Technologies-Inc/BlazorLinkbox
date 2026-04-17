@@ -66,6 +66,18 @@ public enum AppActions
     UpdateRole,
     #endregion Administration - Role Management
 
+    #region Configuration - Path Setup
+    [Description("Get All Paths")]
+    GetAllPaths,
+    [Description("Create Path")]
+    CreatePath,
+    [Description("View Path")]
+    ViewPath,
+    [Description("Update Path")]
+    UpdatePath,
+    #endregion Configuration - Path Setup
+
+
     #region Administration - Truck Assignment
     [Description("Get All Trucks")]
     GetAllTrucks,
