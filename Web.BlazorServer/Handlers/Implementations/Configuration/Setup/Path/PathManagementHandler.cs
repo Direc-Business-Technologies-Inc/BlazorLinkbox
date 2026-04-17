@@ -4,10 +4,10 @@ using Application.UseCases.Queries.Configuration.Setup.Path;
 using Mapster;
 using MediatR;
 using Shared.Entities;
-using Web.BlazorServer.Handlers.Repositories.Configuration.Setup;
+using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Path;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Path;
 
-namespace Web.BlazorServer.Handlers.Implementations.Configuration.Setup;
+namespace Web.BlazorServer.Handlers.Implementations.Configuration.Setup.Path;
 
 public class PathManagementHandler(
     ISender Sender)

@@ -1,0 +1,243 @@
+﻿@using Web.BlazorServer.Components.Security
+@using Web.BlazorServer.ViewModels.Configuration.Setup.Sap
+@using Web.BlazorServer.Components.Shared.Skeletons
+
+@inherits BaseForm<SapSetupVM>
+@page "/configuration/setup/sap-setup/create"
+@page "/configuration/setup/sap-setup/view"
+@page "/configuration/setup/sap-setup/update"
+@layout ProtectedLayout
+@attribute [AppAuthorizationAttribute("VIEW", "OSPS")]
+
+<PageTitle>@(Creating ? "New" : Updating ? "Updating" : string.Empty) Sap @(Viewing || Updating ? FormData.SapCode : string.Empty)</PageTitle>
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-mb-4">
+    <AppBreadCrumbs ModuleCode="OPTS" />
+</RadzenStack>
+<AppContent>
+    <AppFormSkeleton TItem="SapSetupVM" Loading="@IsLoadingData" />
+    <RadzenStack Visible="@(!IsLoadingData)" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="8px" class="rz-mb-2">
+        <RadzenBadge BadgeStyle="@(Creating? BadgeStyle.Success: FormData.Active? BadgeStyle.Success: BadgeStyle.Base)" Text="@(Creating ? "New" : FormData.Active ? "Active" : "Inactive")" />
+        |
+        <RadzenText Text="@(string.IsNullOrEmpty(FormData.SapCode) ? "LinkBox SAP Setup" : FormData.SapCode)" />
+        |
+        <RadzenText Text="@FormData.CreatedDate.ToString("MMM dd, yyyy")" />
+    </RadzenStack>
+    <RadzenTemplateForm Visible="@(!IsLoadingData)" @ref="@TemplateForm" TItem="SapSetupVM" @bind-Data="@FormData" EditContext="@EditContext" Submit="HandleSubmit">
+        <RadzenStack Gap="1rem">
+            <RadzenRow>
+                <RadzenColumn Size="12" SizeMD="8">
+                    <RadzenFieldset AllowCollapse Text="General Information" class="rz-mb-2">
+                        <ChildContent>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenFormField Text="SAP Code *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.SapCode" Name="sp_sapcode" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_sapcode" Text="SAP Code is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenFormField Text="Version" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.Version" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenFormField Text="Database Version *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenDropDown ReadOnly="@Viewing" @bind-Value="@FormData.DbVersion" Data=@DbVersion Name="sp_dbversion" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_dbversion" Text="Database version is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </ChildContent>
+                    </RadzenFieldset>
+                    <RadzenFieldset AllowCollapse Text="Server & Network">
+                        <ChildContent>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="Server Name *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.ServerName" Name="sp_servername" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_servername" Text="Server Name is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="SLD Server *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.SldServer" Name="sp_sld" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_sld" Text="SLD Server is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="IP Address *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenMask Mask="***.**.**.**"
+                                                        CharacterPattern="[0-9]"
+                                                        ReadOnly="@Viewing" 
+                                                        Name="sp_ipaddress"
+                                                        @bind-Value=@FormData.IpAddress
+                                                        Disabled="@IsBusy"
+                                                        class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_ipaddress" Text="IP Address is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="License Port *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenMask Mask="*****"
+                                                        CharacterPattern="[0-9]"
+                                                        ReadOnly="@Viewing"
+                                                        Name="sp_licenseport"
+                                                        @bind-Value=@FormData.LicensePort
+                                                        Disabled="@IsBusy"
+                                                        class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_licenseport" Text="License Port is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </ChildContent>
+                    </RadzenFieldset>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenFieldset AllowCollapse Text="Database & Connection" class="rz-mb-2">
+                        <ChildContent>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="Database Port *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenMask Mask="*****"
+                                                        CharacterPattern="[0-9]"
+                                                        ReadOnly="@Viewing"
+                                                        Name="sp_dbport"
+                                                        @bind-Value=@FormData.DbPort
+                                                        Disabled="@IsBusy"
+                                                        class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_dbport" Text="License Port is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="Database Name *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.DbName" Name="sp_dbname" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_dbname" Text="Database Name is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="Database User ID *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.DbUser" Name="sp_dbuser" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_dbuser" Text="Database User ID is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="Database Password" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenPassword Visible="@(!DbPasswordVisibility)" ReadOnly="@Viewing" @bind-Value="@FormData.DbPassword" Name="sp_dbpass_h" Disabled="@IsBusy" class="rz-w-100" />
+                                            <RadzenTextBox Visible="@DbPasswordVisibility" ReadOnly="@Viewing" @bind-Value="@FormData.DbPassword" Name="sp_dbpass_v" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <End>
+                                            <RadzenButton Icon="@(DbPasswordVisibility ? "visibility_off" : "visibility")" Size="ButtonSize.ExtraSmall" Click="() => ToggleVisibility(0)" />
+                                        </End>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </ChildContent>
+                    </RadzenFieldset>
+                    <RadzenFieldset AllowCollapse Text="SAP Authentication">
+                        <ChildContent>
+                            <RadzenRow>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="SAP User ID *" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.SapUser" Name="sp_sapuser" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <Helper>
+                                            <RadzenRequiredValidator Component="sp_sapuser" Text="SAP User ID is required" />
+                                        </Helper>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="6">
+                                    <RadzenFormField Text="SAP Password" class="rz-w-100">
+                                        <ChildContent>
+                                            <RadzenPassword Visible="@(!SapPasswordVisibility)" ReadOnly="@Viewing" @bind-Value="@FormData.SapPassword" Name="sp_sappass_h" Disabled="@IsBusy" class="rz-w-100" />
+                                            <RadzenTextBox Visible="@SapPasswordVisibility" ReadOnly="@Viewing" @bind-Value="@FormData.SapPassword" Name="sp_sappass_v" Disabled="@IsBusy" class="rz-w-100" />
+                                        </ChildContent>
+                                        <End>
+                                            <RadzenButton Icon="@(SapPasswordVisibility ? "visibility_off" : "visibility")" Size="ButtonSize.ExtraSmall" Click="() => ToggleVisibility(1)" />
+                                        </End>
+                                    </RadzenFormField>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </ChildContent>
+                    </RadzenFieldset>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow>
+                <RadzenColumn>
+                    <RadzenStack class="rz-mt-8" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                        <RadzenButton Text="Back" ButtonStyle="ButtonStyle.Base" Click="@Return" />
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="16px">
+                            <RadzenButton Visible="@(Updating && Can.Update("OPTS"))" Text="Cancel Edit" ButtonStyle="ButtonStyle.Base" Click="@CancelEditing" />
+                            <RadzenButton Visible="@(Viewing && Can.Update("OPTS"))" Text="Edit" ButtonStyle="ButtonStyle.Success" Click="@InitializeEditing" />
+                            <RadzenButton Visible="@((Creating && Can.Create("OPTS")) || (Updating && Can.Update("OPTS")))" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit">
+                                Save @(Updating ? "Changes" : string.Empty)
+                            </RadzenButton>
+                        </RadzenStack>
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+    </RadzenTemplateForm>
+</AppContent>
+
+@code {
+    // Move to Enum later
+    List<string> DbVersion = new List<string>
+    {
+        "dst_MSSQL",
+        "dst_SYBASE",
+        "dst_MSSQL2005",
+        "dst_MAXDB",
+        "dst_MSSQL2008",
+        "dst_MSSQL2012",
+        "dst_MSSQL2014",
+        "dst_HANADB",
+        "dst_MSSQL2017",
+        "dst_MSSQL2019",
+        "dst_PosgresSQL"
+    };
+}

@@ -1,7 +1,7 @@
 ﻿using Shared.Entities;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Path;
 
-namespace Web.BlazorServer.Handlers.Repositories.Configuration.Setup;
+namespace Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Path;
 
 public interface IPathManagementHandler
 {

@@ -77,6 +77,17 @@ public enum AppActions
     UpdatePath,
     #endregion Configuration - Path Setup
 
+    #region Configuration - Sap Setup
+    [Description("Get All Sap")]
+    GetAllSaps,
+    [Description("Create Sap")]
+    CreateSap,
+    [Description("View Sap")]
+    ViewSap,
+    [Description("Update Sap")]
+    UpdateSap,
+    #endregion Configuration - Sap Setup
+
 
     #region Administration - Truck Assignment
     [Description("Get All Trucks")]

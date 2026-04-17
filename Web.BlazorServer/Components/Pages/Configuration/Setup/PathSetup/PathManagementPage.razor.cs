@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Radzen;
 using Shared.Entities;
 using Shared.Kernel;
-using System.Linq;
 using Web.BlazorServer.Components.Shared.Abstraction;
 using Web.BlazorServer.Defaults;
-using Web.BlazorServer.Handlers.Repositories.Configuration.Setup;
+using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Path;
 using Web.BlazorServer.Services.Repositories;
 using Web.BlazorServer.ViewModels.Abstraction;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Path;
@@ -60,4 +58,5 @@ public partial class PathManagementPage
     }
 
     void CreatePath() => NavManager.NavigateTo("/configuration/setup/path-setup/create", true);
+    void ViewPath(PathDataGridVM path) => NavManager.NavigateTo($"/configuration/setup/path-setup/view?ref={path.Id}", true);
 }

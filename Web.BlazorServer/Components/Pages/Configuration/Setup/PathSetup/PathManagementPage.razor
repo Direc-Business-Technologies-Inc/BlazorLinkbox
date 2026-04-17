@@ -45,7 +45,19 @@
                     <RadzenBadge BadgeStyle="@(data.Active? BadgeStyle.Success: BadgeStyle.Base)" Text="@(data.Active ? "Active" : "Inactive")" />
                 </Template>
             </RadzenDataGridColumn>
-
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Type="@typeof(bool)"
+                                  Frozen
+                                  FrozenPosition="FrozenColumnPosition.Right"
+                                  Width="70px"
+                                  MaxWidth="70px"
+                                  Pickable="false" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly">
+                        <RadzenButton Icon="arrow_right_alt" Size="ButtonSize.ExtraSmall" Click="() => ViewPath(data)" />
+                    </RadzenStack>
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </AppDataGrid>
 </AppContent>

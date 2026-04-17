@@ -1,0 +1,97 @@
+﻿@using Web.BlazorServer.Components.Security
+@using Web.BlazorServer.ViewModels.Configuration.Setup.Sap;
+
+@inherits BaseComponent
+@page "/configuration/setup/sap-setup"
+@layout ProtectedLayout
+@attribute [AppAuthorizationAttribute("VIEW", "OSPS")]
+
+<PageTitle>SAP Setup</PageTitle>
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Normal" JustifyContent="JustifyContent.SpaceBetween" class="rz-mb-4">
+    <AppBreadCrumbs ModuleCode="OSPS" />
+</RadzenStack>
+<AppContent>
+    <AppDataGrid @ref="@SapsDataGrid" Id="saps_grid" TItem="SapDataGridVM" DataGetter="@LoadDataAsync" GridSettings="@SapsDataGridSettings" @bind-GridSettingsLoaded=@GridSettingsLoaded ActionName="@ActionGetSaps">
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="8px">
+                <RadzenButton Icon="settings" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@OpenTableSettings" />
+                <RadzenButton Icon="sync" Size="ButtonSize.Small" Click="SapsDataGrid.ReloadDataAsync" />
+                <RadzenButton Visible="@Can.Create("OPTS")" Icon="add" Size=ButtonSize.Small ButtonStyle="ButtonStyle.Success" Shade="Shade.Light" Click="@CreateSap" />
+            </RadzenStack>
+        </HeaderTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.SapCode)"
+                                  Type="@typeof(string)"
+                                  Title="Code" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.DbVersion)"
+                                  Type="@typeof(string)"
+                                  Title="DB Version" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.LicensePort)"
+                                  Type="@typeof(string)"
+                                  Title="LicensePort" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.IpAddress)"
+                                  Type="@typeof(string)"
+                                  Title="Ip Address" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.Version)"
+                                  Type="@typeof(string)"
+                                  Title="Version" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.DbPort)"
+                                  Type="@typeof(string)"
+                                  Title="DB Port" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.DbName)"
+                                  Type="@typeof(string)"
+                                  Title="DB Name" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.DbUser)"
+                                  Type="@typeof(string)"
+                                  Title="DB User" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.SapUser)"
+                                  Type="@typeof(string)"
+                                  Title="SAP User" />
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Property="@nameof(SapDataGridVM.Active)"
+                                  Type="@typeof(bool)"
+                                  Title="Status">
+                <Template Context="data">
+                    <RadzenBadge BadgeStyle="@(data.Active? BadgeStyle.Success: BadgeStyle.Base)" Text="@(data.Active ? "Active" : "Inactive")" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SapDataGridVM"
+                                  Type="@typeof(bool)"
+                                  Frozen
+                                  FrozenPosition="FrozenColumnPosition.Right"
+                                  Width="70px"
+                                  MaxWidth="70px"
+                                  Pickable="false" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly">
+                        <RadzenButton Icon="arrow_right_alt" Size="ButtonSize.ExtraSmall" Click="() => ViewSap(data)" />
+                    </RadzenStack>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </AppDataGrid>
+</AppContent>
+
+@code {
+    async Task OpenTableSettings()
+    {
+        await DialogService.OpenAsync(
+            "Table Settings",
+            ds => @<AppGridSettings TItem="SapDataGridVM"
+    @bind-Grid=@SapsDataGrid.DataGrid
+    @bind-GridSettings=@SapsDataGridSettings />,
+    options: GridSettingsService.GetDialogOptions());
+
+        await SapsDataGrid.DataGrid.Reload();
+    }
+}
