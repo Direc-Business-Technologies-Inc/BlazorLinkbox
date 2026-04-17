@@ -1,0 +1,65 @@
+﻿@using Web.BlazorServer.Components.Security
+@using Web.BlazorServer.ViewModels.Configuration.Setup.Path;
+
+@inherits BaseComponent
+@page "/configuration/setup/path-setup"
+@layout ProtectedLayout
+@attribute [AppAuthorizationAttribute("VIEW", "OPTS")]
+
+<PageTitle>Path Setup</PageTitle>
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-mb-4">
+    <AppBreadCrumbs ModuleCode="OPTS" />
+</RadzenStack>
+<AppContent>
+    <AppDataGrid @ref="@PathsDataGrid" Id="paths_grid" TItem="PathDataGridVM" DataGetter="@LoadDataAsync" GridSettings="@PathsDataGridSettings" @bind-GridSettingsLoaded=@GridSettingsLoaded ActionName="@ActionGetPaths">
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="8px">
+                <RadzenButton Icon="settings" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@OpenTableSettings" />
+                <RadzenButton Icon="sync" Size="ButtonSize.Small" Click="PathsDataGrid.ReloadDataAsync" />
+                <RadzenButton Visible="@Can.Create("OPTS")" Icon="add" Size=ButtonSize.Small ButtonStyle="ButtonStyle.Success" Shade="Shade.Light" Click="@CreatePath" />
+            </RadzenStack>
+        </HeaderTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Property="@nameof(PathDataGridVM.PathCode)"
+                                  Type="@typeof(string)"
+                                  Title="Code"/>
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Property="@nameof(PathDataGridVM.LocalPath)"
+                                  Type="@typeof(string)"
+                                  Title="Local Path"/>
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Property="@nameof(PathDataGridVM.BackupPath)"
+                                  Type="@typeof(string)"
+                                  Title="Backup Path" />
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Property="@nameof(PathDataGridVM.ErrorPath)"
+                                  Type="@typeof(string)"
+                                  Title="Error Path" />
+            <RadzenDataGridColumn TItem="PathDataGridVM"
+                                  Property="@nameof(PathDataGridVM.Active)"
+                                  Type="@typeof(bool)"
+                                  Title="Status">
+                <Template Context="data">
+                    <RadzenBadge BadgeStyle="@(data.Active? BadgeStyle.Success: BadgeStyle.Base)" Text="@(data.Active ? "Active" : "Inactive")" />
+                </Template>
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </AppDataGrid>
+</AppContent>
+
+@code {
+    async Task OpenTableSettings()
+    {
+        await DialogService.OpenAsync(
+            "Table Settings",
+            ds => @<AppGridSettings TItem="PathDataGridVM"
+            @bind-Grid=@PathsDataGrid.DataGrid
+            @bind-GridSettings=@PathsDataGridSettings />,
+            options: GridSettingsService.GetDialogOptions());
+
+        await PathsDataGrid.DataGrid.Reload();
+    }
+}
