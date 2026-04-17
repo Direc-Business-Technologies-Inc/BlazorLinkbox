@@ -1,0 +1,71 @@
+﻿@using Web.BlazorServer.Components.Security
+@using Web.BlazorServer.ViewModels.Configuration.Setup.Api;
+
+@inherits BaseComponent
+@page "/configuration/setup/api-setup"
+@layout ProtectedLayout
+@attribute [AppAuthorizationAttribute("VIEW", "OAPS")]
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-mb-4">
+    <AppBreadCrumbs ModuleCode="OAPS" />
+</RadzenStack>
+<AppContent>
+    <AppDataGrid @ref="@ApisDataGrid" Id="apis_grid" TItem="ApiDataGridVM" DataGetter="@LoadDataAsync" GridSettings="@ApisDataGridSettings" @bind-GridSettingsLoaded=@GridSettingsLoaded ActionName="@ActionGetApis">
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="8px">
+                <RadzenButton Icon="settings" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@OpenTableSettings" />
+                <RadzenButton Icon="sync" Size="ButtonSize.Small" Click="ApisDataGrid.ReloadDataAsync" />
+                <RadzenButton Visible="@Can.Create("OAPS")" Icon="add" Size=ButtonSize.Small ButtonStyle="ButtonStyle.Success" Shade="Shade.Light" Click="@CreateApi" />
+            </RadzenStack>
+        </HeaderTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="ApiDataGridVM"
+                                  Property="@nameof(ApiDataGridVM.ApiCode)"
+                                  Type="@typeof(string)"
+                                  Title="Code" />
+            <RadzenDataGridColumn TItem="ApiDataGridVM"
+                                  Property="@nameof(ApiDataGridVM.Method)"
+                                  Type="@typeof(string)"
+                                  Title="Method" />
+            <RadzenDataGridColumn TItem="ApiDataGridVM"
+                                  Property="@nameof(ApiDataGridVM.Url)"
+                                  Type="@typeof(string)"
+                                  Title="Url" />
+            <RadzenDataGridColumn TItem="ApiDataGridVM"
+                                  Property="@nameof(ApiDataGridVM.Active)"
+                                  Type="@typeof(bool)"
+                                  Title="Status">
+                <Template Context="data">
+                    <RadzenBadge BadgeStyle="@(data.Active? BadgeStyle.Success: BadgeStyle.Base)" Text="@(data.Active ? "Active" : "Inactive")" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="ApiDataGridVM"
+                                  Type="@typeof(bool)"
+                                  Frozen
+                                  FrozenPosition="FrozenColumnPosition.Right"
+                                  Width="70px"
+                                  MaxWidth="70px"
+                                  Pickable="false" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceEvenly">
+                        <RadzenButton Icon="arrow_right_alt" Size="ButtonSize.ExtraSmall" Click="() => ViewApi(data)" />
+                    </RadzenStack>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </AppDataGrid>
+</AppContent>
+
+@code {
+    async Task OpenTableSettings()
+    {
+        await DialogService.OpenAsync(
+            "Table Settings",
+            ds => @<AppGridSettings TItem="ApiDataGridVM"
+            @bind-Grid=@ApisDataGrid.DataGrid
+            @bind-GridSettings=@ApisDataGridSettings />,
+            options: GridSettingsService.GetDialogOptions());
+
+        await ApisDataGrid.DataGrid.Reload();
+    }
+}
