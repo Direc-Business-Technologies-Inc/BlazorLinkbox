@@ -1,5 +1,6 @@
 ﻿using Application.UseCases.Repositories.Bases;
 using Application.UseCases.Repositories.Domain.Administration.User;
+using Application.UseCases.Repositories.Domain.Configuration.Setup;
 using Application.UseCases.Repositories.Domain.System;
 using Database.MsSql.Core;
 using Database.MsSql.Implementation.Bases;
@@ -32,7 +33,9 @@ public static class DatabaseMsSqlDI
         services.TryAddTransient<INavigationRouteReadRepo, NavigationRouteReadRepo>();
         services.TryAddTransient<IUserReadRepo, UserReadRepo>();
         services.TryAddTransient<IRoleReadRepo, RoleReadRepo>();
+        services.TryAddTransient<IPathReadRepo, PathReadRepo>();
 
         return services;
     }
 }
+

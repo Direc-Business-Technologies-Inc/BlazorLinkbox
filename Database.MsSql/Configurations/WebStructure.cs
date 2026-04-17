@@ -145,28 +145,28 @@ public static class WebStructure
             position: 0,
             parentId: SubRouteList1!.First(x => x.Name.Equals("Setup")).Id,
             icon: "arrow_split",
-            uri: "/configuration/configurations/path-setup"),
+            uri: "/configuration/setup/path-setup"),
         NavigationRouteDEM.New(
             name: "SAP Setup",
             protectedRoute: true,
             position: 1,
             parentId: SubRouteList1!.First(x => x.Name.Equals("Setup")).Id,
             icon: "conversion_path",
-            uri: "/configuration/configurations/sap-setup"),
+            uri: "/configuration/setup/sap-setup"),
         NavigationRouteDEM.New(
             name: "API Setup",
             protectedRoute: true,
             position: 2,
             parentId: SubRouteList1!.First(x => x.Name.Equals("Setup")).Id,
             icon: "settings_input_hdmi",
-            uri: "/configuration/configurations/api-setup"),
+            uri: "/configuration/setup/api-setup"),
         NavigationRouteDEM.New(
             name: "Email Setup",
             protectedRoute: true,
             position: 3,
             parentId: SubRouteList1!.First(x => x.Name.Equals("Setup")).Id,
             icon: "mail",
-            uri: "/configuration/configurations/email-setup"),
+            uri: "/configuration/setup/email-setup"),
 
         /*NavigationRouteDEM.New(
             name: "Receiving",
