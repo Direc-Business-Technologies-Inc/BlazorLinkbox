@@ -1,5 +1,8 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Components;
+using Radzen;
+using Sprache;
+using Web.BlazorServer.Components.Shared.Others;
 using Web.BlazorServer.Defaults;
 using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Api;
 using Web.BlazorServer.Helpers;
@@ -31,7 +34,6 @@ public partial class ApiManagementCVU
     #region Primitives
     PageActionTypeEnum PageAction { get; set; }
     bool PasswordVisibility { get; set; } = false;
-    bool HiddenFields { get; set; } = false;
     bool Creating => PageAction == PageActionTypeEnum.Create;
     bool Updating => PageAction == PageActionTypeEnum.Update;
     bool Viewing => PageAction == PageActionTypeEnum.View;
@@ -175,6 +177,26 @@ public partial class ApiManagementCVU
                 return;
 
         NavManager.NavigateTo($"/configuration/setup/Api-setup", true);
+    }
+
+    async Task HandleSidebar()
+    {
+        await DialogService.OpenSideAsync<HiddenOptions>(
+            "Connection Settings",
+            new Dictionary<string, object> 
+            { 
+                { nameof(HiddenOptions.FormData), FormData },
+                { nameof(HiddenOptions.Viewing), Viewing },
+                { nameof(HiddenOptions.IsBusy), IsBusy }
+            },
+            options: new SideDialogOptions { 
+                CloseDialogOnOverlayClick = true, 
+                Resizable = true, 
+                Position = DialogPosition.Right, 
+                ShowMask = true, 
+                MinHeight = 250.0, 
+                MinWidth = 350.0 }
+            );
     }
     #endregion Custom Functions
 }

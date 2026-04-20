@@ -1,0 +1,43 @@
+﻿@using Web.BlazorServer.ViewModels.Configuration.Setup.Api
+
+<RadzenStack class="rz-w-100" Orientation="Orientation.Vertical" Gap="8px">
+    <RadzenFormField Text="API Key" class="rz-w-100">
+        <ChildContent>
+            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.ApiKey" Disabled="@IsBusy" class="rz-w-100" />
+        </ChildContent>
+    </RadzenFormField>
+    <RadzenFormField Text="API Secret Key" class="rz-w-100">
+        <ChildContent>
+            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.ApiSecretKey" Disabled="@IsBusy" class="rz-w-100" />
+        </ChildContent>
+    </RadzenFormField>
+    <RadzenFormField Text="API Token" class="rz-w-100">
+        <ChildContent>
+            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.ApiToken" Disabled="@IsBusy" class="rz-w-100" />
+        </ChildContent>
+    </RadzenFormField>
+    <RadzenFormField Text="API Login URL" class="rz-w-100">
+        <ChildContent>
+            <RadzenTextBox ReadOnly="@Viewing" @bind-Value="@FormData.ApiLoginUrl" Disabled="@IsBusy" class="rz-w-100" />
+        </ChildContent>
+    </RadzenFormField>
+    <RadzenFormField Text="API Login Body" class="rz-w-100">
+        <ChildContent>
+            <RadzenTextArea ReadOnly="@Viewing" @bind-Value="@FormData.ApiLoginBody" Disabled="@IsBusy" class="rz-w-100" Rows="10" />
+        </ChildContent>
+    </RadzenFormField>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="8px" class="rz-mt-4">
+        <RadzenButton Text="Clear" ButtonStyle="ButtonStyle.Base" Click="HandleClear" Disabled="@(Viewing || IsBusy)" />
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    private void HandleClear()
+    {
+        FormData.ApiKey = string.Empty;
+        FormData.ApiSecretKey = string.Empty;
+        FormData.ApiToken = string.Empty;
+        FormData.ApiLoginUrl = string.Empty;
+        FormData.ApiLoginBody = string.Empty;
+    }
+}
