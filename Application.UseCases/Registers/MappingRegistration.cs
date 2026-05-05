@@ -1,4 +1,7 @@
 ﻿using Application.DataTransferObjects.Administration.User;
+using Application.DataTransferObjects.Configuration.Setup.Api;
+using Application.DataTransferObjects.Configuration.Setup.Email;
+using Application.DataTransferObjects.Configuration.Setup.Sap;
 using Application.DataTransferObjects.Others;
 using Application.DataTransferObjects.Transactions.Commons;
 using Application.DataTransferObjects.Transactions.Procurement.Order;
@@ -70,6 +73,26 @@ public class MappingRegistration : IRegister
         #endregion User Management
 
         #endregion Administration
+
+        #region Configuration
+
+        #region Setup
+
+        // API Setup Mappings
+        config.NewConfig<ApiSetupDTO, ApiSetupDTO>();
+        config.NewConfig<ApiDataGridDTO, ApiDataGridDTO>();
+
+        // Email Setup Mappings
+        config.NewConfig<EmailSetupDTO, EmailSetupDTO>();
+        config.NewConfig<EmailDataGridDTO, EmailDataGridDTO>();
+
+        // SAP Setup Mappings
+        config.NewConfig<SapSetupDTO, SapSetupDTO>();
+        config.NewConfig<SapDataGridDTO, SapDataGridDTO>();
+
+        #endregion Setup
+
+        #endregion Configuration
 
         #endregion DTO to VO
     }
