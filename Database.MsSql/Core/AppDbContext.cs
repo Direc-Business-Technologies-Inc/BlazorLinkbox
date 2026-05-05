@@ -1,6 +1,9 @@
 ﻿using Domain.Entities.Administration.User.Management;
 using Domain.Entities.Administration.User.Role;
-using Domain.Entities.Configuration.Setup;
+using Domain.Entities.Entities.Configuration.Setup.Api;
+using Domain.Entities.Entities.Configuration.Setup.Email;
+using Domain.Entities.Entities.Configuration.Setup.Path;
+using Domain.Entities.Entities.Configuration.Setup.Sap;
 using Domain.Entities.System;
 using Domain.Entities.Transaction.Common;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +24,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<RolePermissionDEM> ROL1 { get; set; }
     public DbSet<ModulePermissionDEM> OMPR { get; set; }
     public DbSet<PathDEM> OPTS { get; set; }
+    public DbSet<ApiDEM> OAPS { get; set; }
+    public DbSet<EmailDEM> OEMS { get; set; }
+    public DbSet<SapDEM> OSPS { get; set; }
     #endregion DbSets
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

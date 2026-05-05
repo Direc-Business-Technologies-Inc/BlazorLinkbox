@@ -1,5 +1,5 @@
 using Application.DataTransferObjects.Configuration.Setup.Path;
-using Application.UseCases.Repositories.Domain.Configuration.Setup;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Path;
 using MediatR;
 
 namespace Application.UseCases.Queries.Configuration.Setup.Path;

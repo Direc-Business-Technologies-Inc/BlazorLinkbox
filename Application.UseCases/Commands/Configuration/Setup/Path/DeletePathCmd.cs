@@ -1,5 +1,5 @@
 using Application.UseCases.Repositories.Bases;
-using Domain.Entities.Configuration.Setup;
+using Domain.Entities.Entities.Configuration.Setup.Path;
 using MediatR;
 
 namespace Application.UseCases.Commands.Configuration.Setup.Path;

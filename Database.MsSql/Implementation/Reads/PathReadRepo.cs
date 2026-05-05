@@ -1,8 +1,8 @@
 using Application.DataTransferObjects.Configuration.Setup.Path;
-using Application.UseCases.Repositories.Domain.Configuration.Setup;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Path;
 using Database.Libraries.Helpers;
 using Database.MsSql.Core;
-using Domain.Entities.Configuration.Setup;
+using Domain.Entities.Entities.Configuration.Setup.Path;
 using Microsoft.EntityFrameworkCore;
 using Shared.Entities;
 
