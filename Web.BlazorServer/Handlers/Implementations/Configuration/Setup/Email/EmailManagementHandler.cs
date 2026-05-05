@@ -1,33 +1,59 @@
-﻿using Shared.Entities;
+﻿using Application.DataTransferObjects.Configuration.Setup.Email;
+using Application.UseCases.Commands.Configuration.Setup.Email;
+using Application.UseCases.Queries.Configuration.Setup.Email;
+using Mapster;
+using MediatR;
+using Shared.Entities;
 using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Email;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Email;
 
 namespace Web.BlazorServer.Handlers.Implementations.Configuration.Setup.Email;
 
-public class EmailManagementHandler : IEmailManagementHandler
+public class EmailManagementHandler(
+    ISender Sender)
+    : IEmailManagementHandler
 {
-    public Task<bool> CreateEmailAsync(EmailSetupVM Email)
+    public async Task<bool> CreateEmailAsync(EmailSetupVM Email)
     {
-        throw new NotImplementedException();
+        var dto = Email.Adapt<EmailSetupDTO>();
+
+        CreateEmailCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> DeleteEmailAsync(Guid EmailId)
+    public async Task<(IEnumerable<EmailDataGridVM> data, int count)> GetAllEmailsAsync(DataGridIntent intent)
     {
-        throw new NotImplementedException();
+        GetAllEmailsQry qry = new(intent);
+        var dto = await Sender.Send(qry);
+
+        return (dto.Data.Adapt<IEnumerable<EmailDataGridVM>>(), dto.Count);
     }
 
-    public Task<(IEnumerable<EmailDataGridVM> data, int count)> GetAllEmailsAsync(DataGridIntent intent)
+    public async Task<EmailSetupVM?> GetEmailAsync(Guid EmailId)
     {
-        throw new NotImplementedException();
+        GetEmailQry qry = new(EmailId);
+        var response = await Sender.Send(qry);
+
+        return response.Adapt<EmailSetupVM>();
     }
 
-    public Task<EmailSetupVM?> GetEmailAsync(Guid EmailId)
+    public async Task<bool> UpdateEmailAsync(EmailSetupVM Email)
     {
-        throw new NotImplementedException();
+        var dto = Email.Adapt<EmailSetupDTO>();
+
+        UpdateEmailCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> UpdateEmailAsync(EmailSetupVM Email)
+    public async Task<bool> DeleteEmailAsync(Guid EmailId)
     {
-        throw new NotImplementedException();
+        DeleteEmailCmd cmd = new(EmailId);
+        await Sender.Send(cmd);
+
+        return true;
     }
 }

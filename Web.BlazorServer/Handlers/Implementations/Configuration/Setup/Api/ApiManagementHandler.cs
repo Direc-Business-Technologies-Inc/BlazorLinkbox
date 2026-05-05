@@ -1,33 +1,59 @@
-﻿using Shared.Entities;
+﻿using Application.DataTransferObjects.Configuration.Setup.Api;
+using Application.UseCases.Commands.Configuration.Setup.Api;
+using Application.UseCases.Queries.Configuration.Setup.Api;
+using Mapster;
+using MediatR;
+using Shared.Entities;
 using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Api;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Api;
 
 namespace Web.BlazorServer.Handlers.Implementations.Configuration.Setup.Api;
 
-public class ApiManagementHandler : IApiManagementHandler
+public class ApiManagementHandler(
+    ISender Sender)
+    : IApiManagementHandler
 {
-    public Task<bool> CreateApiAsync(ApiSetupVM api)
+    public async Task<bool> CreateApiAsync(ApiSetupVM api)
     {
-        throw new NotImplementedException();
+        var dto = api.Adapt<ApiSetupDTO>();
+
+        CreateApiCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> DeleteApiAsync(Guid apiId)
+    public async Task<(IEnumerable<ApiDataGridVM> data, int count)> GetAllApisAsync(DataGridIntent intent)
     {
-        throw new NotImplementedException();
+        GetAllApisQry qry = new(intent);
+        var dto = await Sender.Send(qry);
+
+        return (dto.Data.Adapt<IEnumerable<ApiDataGridVM>>(), dto.Count);
     }
 
-    public Task<(IEnumerable<ApiDataGridVM> data, int count)> GetAllApisAsync(DataGridIntent intent)
+    public async Task<ApiSetupVM?> GetApiAsync(Guid apiId)
     {
-        throw new NotImplementedException();
+        GetApiQry qry = new(apiId);
+        var response = await Sender.Send(qry);
+
+        return response.Adapt<ApiSetupVM>();
     }
 
-    public Task<ApiSetupVM?> GetApiAsync(Guid apiId)
+    public async Task<bool> UpdateApiAsync(ApiSetupVM api)
     {
-        throw new NotImplementedException();
+        var dto = api.Adapt<ApiSetupDTO>();
+
+        UpdateApiCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> UpdateApiAsync(ApiSetupVM api)
+    public async Task<bool> DeleteApiAsync(Guid apiId)
     {
-        throw new NotImplementedException();
+        DeleteApiCmd cmd = new(apiId);
+        await Sender.Send(cmd);
+
+        return true;
     }
 }

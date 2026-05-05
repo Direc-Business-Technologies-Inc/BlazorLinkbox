@@ -1,33 +1,59 @@
-﻿using Shared.Entities;
+﻿using Application.DataTransferObjects.Configuration.Setup.Sap;
+using Application.UseCases.Commands.Configuration.Setup.Sap;
+using Application.UseCases.Queries.Configuration.Setup.Sap;
+using Mapster;
+using MediatR;
+using Shared.Entities;
 using Web.BlazorServer.Handlers.Repositories.Configuration.Setup.Sap;
 using Web.BlazorServer.ViewModels.Configuration.Setup.Sap;
 
 namespace Web.BlazorServer.Handlers.Implementations.Configuration.Setup.Sap;
 
-public class SapManagementHandler : ISapManagementHandler
+public class SapManagementHandler(
+    ISender Sender)
+    : ISapManagementHandler
 {
-    public Task<bool> CreateSapAsync(SapSetupVM sap)
+    public async Task<bool> CreateSapAsync(SapSetupVM sap)
     {
-        throw new NotImplementedException();
+        var dto = sap.Adapt<SapSetupDTO>();
+
+        CreateSapCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> DeleteSapAsync(Guid sapId)
+    public async Task<(IEnumerable<SapDataGridVM> data, int count)> GetAllSapsAsync(DataGridIntent intent)
     {
-        throw new NotImplementedException();
+        GetAllSapsQry qry = new(intent);
+        var dto = await Sender.Send(qry);
+
+        return (dto.Data.Adapt<IEnumerable<SapDataGridVM>>(), dto.Count);
     }
 
-    public Task<(IEnumerable<SapDataGridVM> data, int count)> GetAllSapsAsync(DataGridIntent intent)
+    public async Task<SapSetupVM?> GetSapAsync(Guid sapId)
     {
-        throw new NotImplementedException();
+        GetSapQry qry = new(sapId);
+        var response = await Sender.Send(qry);
+
+        return response.Adapt<SapSetupVM>();
     }
 
-    public Task<SapSetupVM?> GetSapAsync(Guid sapId)
+    public async Task<bool> UpdateSapAsync(SapSetupVM sap)
     {
-        throw new NotImplementedException();
+        var dto = sap.Adapt<SapSetupDTO>();
+
+        UpdateSapCmd cmd = new(dto);
+        await Sender.Send(cmd);
+
+        return true;
     }
 
-    public Task<bool> UpdateSapAsync(SapSetupVM sap)
+    public async Task<bool> DeleteSapAsync(Guid sapId)
     {
-        throw new NotImplementedException();
+        DeleteSapCmd cmd = new(sapId);
+        await Sender.Send(cmd);
+
+        return true;
     }
 }
