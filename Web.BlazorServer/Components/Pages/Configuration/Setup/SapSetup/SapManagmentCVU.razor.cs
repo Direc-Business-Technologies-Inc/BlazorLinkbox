@@ -144,7 +144,7 @@ public partial class SapManagmentCVU
             AppBusyService.SetBusy(ActionCreateSap, false);
             return result;
 
-        }, AppActionOptionPresets.Loading(ActionCreateSap));
+        }, AppActionOptionPresets.Confirmed(ActionCreateSap));
 
         action.OnSuccess(async (args) =>
         {
@@ -165,6 +165,12 @@ public partial class SapManagmentCVU
             return result;
 
         }, AppActionOptionPresets.Confirmed(ActionUpdateSap));
+
+        action.OnSuccess(async (args) =>
+        {
+            UnsavedChangesService.MarkClean();
+            await Return();
+        });
     }
 
     async Task Return()

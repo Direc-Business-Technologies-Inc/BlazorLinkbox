@@ -17,5 +17,5 @@ public class SapSetupVM : AuditableVM
     public string DbPassword { get; set; }
     public string SapUser { get; set; }
     public string SapPassword { get; set; }
-    public bool Active { get; set; }
+    public bool Active { get; set; } = true;
 }

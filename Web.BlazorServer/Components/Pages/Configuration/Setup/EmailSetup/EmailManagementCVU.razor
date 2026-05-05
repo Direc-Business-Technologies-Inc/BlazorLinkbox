@@ -27,7 +27,7 @@
         <RadzenStack Gap="1rem">
             <RadzenRow>
                 <RadzenColumn Size="12" SizeMD="6">
-                    <RadzenFieldset AllowCollapse Text="Email Configuration">
+                    <RadzenFieldset AllowCollapse Text="Email Details">
                         <ChildContent>
                             <RadzenRow>
                                 <RadzenColumn Size="12" SizeMD="6">
@@ -73,7 +73,7 @@
                     </RadzenFieldset>
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="6">
-                    <RadzenFieldset AllowCollapse Text="SMTP Configuration">
+                    <RadzenFieldset AllowCollapse Text="Email Configuration">
                         <ChildContent>
                             <RadzenRow>
                                 <RadzenColumn Size="12" SizeMD="6">
@@ -125,6 +125,20 @@
                             </RadzenRow>
                         </ChildContent>
                     </RadzenFieldset>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow>
+                <RadzenColumn>
+                    <RadzenStack class="rz-mt-8" Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                        <RadzenButton Text="Back" ButtonStyle="ButtonStyle.Base" Click="@Return" />
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="16px">
+                            <RadzenButton Visible="@(Updating && Can.Update("OEMS"))" Text="Cancel Edit" ButtonStyle="ButtonStyle.Base" Click="@CancelEditing" />
+                            <RadzenButton Visible="@(Viewing && Can.Update("OEMS"))" Text="Edit" ButtonStyle="ButtonStyle.Success" Click="@InitializeEditing" />
+                            <RadzenButton Visible="@((Creating && Can.Create("OEMS")) || (Updating && Can.Update("OEMS")))" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit">
+                                Save @(Updating ? "Changes" : string.Empty)
+                            </RadzenButton>
+                        </RadzenStack>
+                    </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>
         </RadzenStack>
