@@ -1,6 +1,9 @@
 ﻿using Application.UseCases.Repositories.Bases;
 using Application.UseCases.Repositories.Domain.Administration.User;
-using Application.UseCases.Repositories.Domain.Configuration.Setup;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Api;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Email;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Path;
+using Application.UseCases.Repositories.Domain.Configuration.Setup.Sap;
 using Application.UseCases.Repositories.Domain.System;
 using Database.MsSql.Core;
 using Database.MsSql.Implementation.Bases;
@@ -34,6 +37,9 @@ public static class DatabaseMsSqlDI
         services.TryAddTransient<IUserReadRepo, UserReadRepo>();
         services.TryAddTransient<IRoleReadRepo, RoleReadRepo>();
         services.TryAddTransient<IPathReadRepo, PathReadRepo>();
+        services.TryAddTransient<IApiReadRepo, ApiReadRepo>();
+        services.TryAddTransient<IEmailReadRepo, EmailReadRepo>();
+        services.TryAddTransient<ISapReadRepo, SapReadRepo>();
 
         return services;
     }
